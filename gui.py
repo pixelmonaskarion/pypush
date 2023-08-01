@@ -64,7 +64,7 @@ msg_list = None
 msg_len = 0
 
 effect_names = [
-    "None",
+    "No Effect",
     "Slam",
     "Loud",
     "Gentle",
@@ -124,19 +124,35 @@ def tick():
 def setup():
     global msg_list
     frm.grid()
+
+    ttk.Label(frm, text="Send From:").grid(column=0, row=0)
+
+    handle_var = StringVar()
+    handle_var.set( user.handles[0] )
+    def change_handle(event):
+        #I couldn't figure out how to make this a lambda 😭
+        user.current_handle = handle_var.get()
+    OptionMenu(frm, handle_var, *user.handles, command=change_handle).grid(column=1, row=0)
+
+    ttk.Label(frm, text="Send To:").grid(column=0, row=1)
+
     send_to_var = tk.StringVar()
-    ttk.Label(frm, text="Send To:").grid(column=0, row=0)
-    ttk.Entry(frm, textvariable=send_to_var).grid(column=1, row=0)
+    ttk.Entry(frm, textvariable=send_to_var).grid(column=1, row=1)
+
+    ttk.Label(frm, text="Message:").grid(column=0, row=2)
+
     msg_var = tk.StringVar()
-    ttk.Label(frm, text="Message:").grid(column=0, row=1)
-    ttk.Entry(frm, textvariable=msg_var).grid(column=1, row=1)
+    ttk.Entry(frm, textvariable=msg_var).grid(column=1, row=2)
+
     chosen_effect_var = StringVar()
     chosen_effect_var.set( effect_names[0] )
-    OptionMenu(frm, chosen_effect_var, *effect_names).grid(column=0, row=2)
+    OptionMenu(frm, chosen_effect_var, *effect_names).grid(column=0, row=3)
+    
     button = ttk.Button(frm, text="Send", command=lambda: send_message(msg_var.get(), send_to_var.get(), get_effect_id(chosen_effect_var.get())))
-    button.grid(column=1, row=2)
+    button.grid(column=1, row=3)
+
     msg_list = tk.Listbox(frm, width=400, height=300, font=("Arial", 10))
-    msg_list.grid(column=2, row=3)
+    msg_list.grid(column=2, row=4)
     tick()
 
 def continue_setup():
